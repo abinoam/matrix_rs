@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.com/abinoam/matrix_rs.svg?token=jLesqB3VvKRLAuZkesEy&branch=master)](https://travis-ci.com/abinoam/matrix_rs)
+
 # MatrixRs
 
 Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/matrix_rs`. To experiment with that code, run `bin/console` for an interactive prompt.
