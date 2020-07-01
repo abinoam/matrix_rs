@@ -1,6 +1,6 @@
 require "matrix_rs/version"
 
-module MatrixRs
+class MatrixRs
   class Error < StandardError; end
   # Your code goes here...
 end
