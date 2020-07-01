@@ -26,7 +26,7 @@ methods!(
 
 #[allow(non_snake_case)]
 #[no_mangle]
-pub extern "C" fn Init_rutie_ruby_example() {
+pub extern "C" fn Init_matrix_rs() {
     Class::new("MatrixRs", None).define(|itself| {
         itself.def_self("reverse", pub_reverse);
     });
