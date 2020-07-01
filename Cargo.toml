@@ -10,5 +10,5 @@ edition = "2018"
 rutie = {version="0.7.0", features=["no-link"]}
 
 [lib]
-name = "rutie_matrix_rs"
+name = "matrix_rs"
 crate-type = ["cdylib"]
