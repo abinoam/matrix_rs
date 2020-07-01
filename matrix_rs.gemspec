@@ -6,7 +6,7 @@ Gem::Specification.new do |spec|
   spec.authors       = ["Abinoam Praxedes Marques Junior"]
   spec.email         = ["abinoam@gmail.com"]
 
-  spec.summary       = %q{TODO: Write a short summary, because RubyGems requires one.}
+  spec.summary       = %q{A Matrix implementation in Rust (for Ruby)}
   spec.description   = %q{A Matrix implementation in Rust (for Ruby)}
   spec.homepage      = "https://github.com/abinoam/matrix_rs"
   spec.license       = "MIT"
