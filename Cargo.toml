@@ -7,7 +7,7 @@ edition = "2018"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-rutie = {version="0.7.0", features=["no-link"]}
+rutie = {version="0.7.0"}
 
 [lib]
 name = "matrix_rs"
