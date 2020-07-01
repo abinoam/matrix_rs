@@ -3,10 +3,10 @@ extern crate rutie;
 
 use rutie::{Class, Object, RString, VM};
 
-class!(RutieExample);
+class!(MatrixRs);
 
 methods!(
-    RutieExample,
+    MatrixRs,
     _itself,
 
     fn pub_reverse(input: RString) -> RString {
@@ -27,7 +27,7 @@ methods!(
 #[allow(non_snake_case)]
 #[no_mangle]
 pub extern "C" fn Init_rutie_ruby_example() {
-    Class::new("RutieExample", None).define(|itself| {
+    Class::new("MatrixRs", None).define(|itself| {
         itself.def_self("reverse", pub_reverse);
     });
 }
