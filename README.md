@@ -2,9 +2,21 @@
 
 # MatrixRs
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/matrix_rs`. To experiment with that code, run `bin/console` for an interactive prompt.
+A Rust implementation of Ruby Matrix class.
 
-TODO: Delete this and the text above, and describe your gem
+I am studying Rust and I'll try to make a drop in replacement for Matrix Ruby library.
+
+I'm fresh new to Rust so I don't know if I would be able to acomplish this.
+
+## Roadmap
+
+Done:
+1. Add Matrix gem repository as git submodule
+  - This will easy the task of keeping track with future updates
+2. Run Matrix gem original test suite against MatrixRs class
+
+OBS: Meanwhile MatrixRs is just an empty class (placeholder).
+No Rust code were added yet. It just doesn't do anything!
 
 ## Installation
 
