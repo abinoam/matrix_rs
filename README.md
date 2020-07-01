@@ -12,11 +12,15 @@ I'm fresh new to Rust so I don't know if I would be able to acomplish this.
 
 Done:
 1. Add Matrix gem repository as git submodule
-  - This will easy the task of keeping track with future updates
+    - This will easy the task of keeping track with future updates
 2. Run Matrix gem original test suite against MatrixRs class
+3. Add rutie gem and boilerplate code
+4. Add a fake `MatrixRs.[]` and conect Ruby to Rust
+5. Be able to run tests that talk to the Rust fake implementation
 
-OBS: Meanwhile MatrixRs is just an empty class (placeholder).
-No Rust code were added yet. It just doesn't do anything!
+OBS:
+- Meanwhile MatrixRs is connected to its Rust counterpart.
+- Some Rust code were added but it just doesn't do anything!
 
 ## Installation
 
