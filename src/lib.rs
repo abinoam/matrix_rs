@@ -1,5 +1,6 @@
 #[macro_use]
 extern crate rutie;
+extern crate lazy_static;
 
 use rutie::rubysys::class;
 use rutie::types::{Argc, Value};

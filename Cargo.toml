@@ -8,6 +8,7 @@ edition = "2018"
 
 [dependencies]
 rutie = {version="0.7.0"}
+lazy_static = ""
 
 [lib]
 name = "matrix_rs"
