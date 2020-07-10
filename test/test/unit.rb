@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Require Matrix here so it will not be overwritten when
 # required again from within the Matrix gem test suite
 require "matrix"
@@ -25,9 +27,10 @@ module Test
       # deprecating assert_equal with nil as argument
       alias _assert_equal assert_equal
 
-      def assert_equal(first, second, msg=nil)
+      def assert_equal(first, second, msg = nil)
         return assert_nil(first, msg) if second.nil?
         return assert_nil(second, msg) if first.nil?
+
         _assert_equal first, second, msg
       end
 
