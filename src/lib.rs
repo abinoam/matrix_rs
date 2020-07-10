@@ -19,10 +19,7 @@ pub extern "C" fn pub_self_brackets(argc: Argc, argv: *const AnyObject, _: AnyOb
         class::rb_scan_args(argc, p_argv, str_to_cstring("*").as_ptr(), &args)
     };
 
-    let arguments = Array::from(args);
-
-    let output = arguments;
-
+    let output = Array::from(args);
     output.to_any_object()
 }
 
