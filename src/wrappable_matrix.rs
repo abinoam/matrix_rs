@@ -9,6 +9,10 @@ impl WrappableMatrix {
     fn new(matrix: Array2<f64>) -> Self {
         Self { matrix }
     }
+
+    pub fn to_s(&self) -> String {
+        self.matrix.to_string()
+    }
 }
 
 impl From<rutie::Array> for WrappableMatrix {

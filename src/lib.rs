@@ -11,7 +11,7 @@ use rutie::rubysys::class;
 use rutie::types::{Argc, Value};
 use rutie::util::str_to_cstring;
 use rutie::{AnyObject, Array, Integer};
-use rutie::{Class, Object};
+use rutie::{Class, Object, RString};
 use std::mem;
 use wrappable_matrix::WrappableMatrix;
 
@@ -34,7 +34,7 @@ pub extern "C" fn pub_self_brackets(argc: Argc, argv: *const AnyObject, _: AnyOb
 
 methods!(
     MatrixRs,
-    _itself,
+    itself,
     fn pub_self_empty(row_count: Integer, col_count: Integer) -> Array {
         // build a fake empty Array for testing
 
@@ -62,6 +62,12 @@ methods!(
 
         array
     }
+
+    fn pub_to_s() -> RString {
+        let matrix_str = itself.get_data(&*MATRIX_WRAPPER_INSTANCE).to_s();
+
+        RString::from(matrix_str)
+    }
 );
 
 #[allow(non_snake_case)]
@@ -70,6 +76,8 @@ pub extern "C" fn Init_matrix_rs() {
     Class::new("MatrixRs", None).define(|itself| {
         itself.def_self("[]", pub_self_brackets);
         itself.def_self("empty", pub_self_empty);
+
+        itself.def("to_s", pub_to_s);
     });
 }
 
