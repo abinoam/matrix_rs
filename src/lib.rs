@@ -1,6 +1,9 @@
 #[macro_use]
 extern crate rutie;
 extern crate lazy_static;
+extern crate ndarray;
+
+mod wrappable_matrix;
 
 use rutie::rubysys::class;
 use rutie::types::{Argc, Value};
@@ -8,6 +11,7 @@ use rutie::util::str_to_cstring;
 use rutie::{AnyObject, Array, Integer};
 use rutie::{Class, Object};
 use std::mem;
+use wrappable_matrix::WrappableMatrix;
 
 class!(MatrixRs);
 
