@@ -1,5 +1,7 @@
 #[macro_use]
 extern crate rutie;
+
+#[macro_use]
 extern crate lazy_static;
 extern crate ndarray;
 
@@ -13,6 +15,8 @@ use rutie::{Class, Object};
 use std::mem;
 use wrappable_matrix::WrappableMatrix;
 
+wrappable_struct!(WrappableMatrix, MatrixWrapper, MATRIX_WRAPPER_INSTANCE);
+
 class!(MatrixRs);
 
 pub extern "C" fn pub_self_brackets(argc: Argc, argv: *const AnyObject, _: AnyObject) -> AnyObject {
@@ -24,8 +28,8 @@ pub extern "C" fn pub_self_brackets(argc: Argc, argv: *const AnyObject, _: AnyOb
         class::rb_scan_args(argc, p_argv, str_to_cstring("*").as_ptr(), &args)
     };
 
-    let output = Array::from(args);
-    output.to_any_object()
+    let matrix = WrappableMatrix::from(Array::from(args));
+    Class::from_existing("MatrixRs").wrap_data(matrix, &*MATRIX_WRAPPER_INSTANCE)
 }
 
 methods!(

@@ -11,6 +11,13 @@ impl WrappableMatrix {
     }
 }
 
+impl From<rutie::Array> for WrappableMatrix {
+    fn from(ary: rutie::Array) -> Self {
+        // Fake implementation
+        Self { matrix: Array2::zeros((2, 3)) }
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
