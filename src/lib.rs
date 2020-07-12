@@ -12,13 +12,23 @@ use rutie::rubysys::class;
 use rutie::types::{Argc, Value};
 use rutie::util::str_to_cstring;
 use rutie::{AnyObject, Array, Integer};
-use rutie::{Class, Object, RString};
+use rutie::{Class, Object, RString, VerifiedObject};
 use std::mem;
 use wrappable_matrix::WrappableMatrix;
 
 wrappable_struct!(WrappableMatrix, MatrixWrapper, MATRIX_WRAPPER_INSTANCE);
 
 class!(MatrixRs);
+
+impl VerifiedObject for MatrixRs {
+    fn is_correct_type<T: Object>(object: &T) -> bool {
+        Class::from_existing("MatrixRs").case_equals(object)
+    }
+
+    fn error_message() -> &'static str {
+        "Error converting to MatrixRs"
+    }
+}
 
 pub extern "C" fn pub_self_brackets(argc: Argc, argv: *const AnyObject, _: AnyObject) -> AnyObject {
     let args = Value::from(0);
