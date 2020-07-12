@@ -1,5 +1,6 @@
 use crate::args_treating::ArgsTreating;
 use ndarray::Array2;
+use rutie::{AnyException, Array, Exception, Float, Object, VM};
 
 #[derive(Debug, PartialEq)]
 pub struct WrappableMatrix {
@@ -18,8 +19,32 @@ impl WrappableMatrix {
 
 impl From<rutie::Array> for WrappableMatrix {
     fn from(ary: rutie::Array) -> Self {
-        // Fake implementation
-        Self { matrix: Array2::zeros((2, 3)) }
+        let mut vec: Vec<f64> = Vec::new();
+        let rows = ary.length();
+
+        ary.into_iter()
+            .map(|row_any_obj| row_any_obj.try_convert_to::<Array>())
+            .map(|result| result.unwrap_or_rb_raise())
+            .for_each(|row_ary| {
+                row_ary
+                    .into_iter()
+                    .map(|col_any_obj| col_any_obj.try_convert_to::<Float>())
+                    .map(|result| result.unwrap_or_rb_raise())
+                    .for_each(|col_float| vec.push(col_float.to_f64()))
+            });
+
+        let cols = vec.len() / rows;
+
+        match Array2::from_shape_vec((rows, cols), vec) {
+            Ok(matrix) => Self { matrix },
+            Err(err) => {
+                VM::raise_ex(AnyException::new(
+                    "StandardError",
+                    Some(&format!("ndarray error: {:?}", err)),
+                ));
+                unreachable!()
+            }
+        }
     }
 }
 

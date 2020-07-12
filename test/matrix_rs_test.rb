@@ -15,10 +15,15 @@ class MatrixRsTest < Minitest::Test
   end
 
   def test_matrix_rs_brackets_doesnt_raises
-    assert ::MatrixRs[[1, 2, 3], [4, 5, 6]]
+    assert ::MatrixRs[[1.2, 2.4, 3.6], [4.8, 5.1, 6.1]]
   end
 
   def test_matrix_rs_brackets_returns_a_matrix_rs_instance
-    assert_equal ::MatrixRs[[1, 2, 3], [4, 5, 6]].class, MatrixRs
+    assert_equal ::MatrixRs[[1.2, 2.4, 3.6], [4.8, 5.1, 6.1]].class, MatrixRs
+  end
+
+  def test_matrix_rs_to_s
+    assert_equal ::MatrixRs[[1.2, 2.4, 3.6], [4.8, 5.1, 6.1]].to_s,
+                 "[[1.2, 2.4, 3.6],\n [4.8, 5.1, 6.1]]"
   end
 end
