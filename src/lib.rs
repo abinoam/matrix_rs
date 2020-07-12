@@ -33,8 +33,8 @@ pub extern "C" fn pub_self_brackets(argc: Argc, argv: *const AnyObject, _: AnyOb
 }
 
 methods!(
-    MatrixRs,  // Rutie struct (class)
-    rtself,    // Rutie self (instance) - methods will receive it as arg
+    MatrixRs, // Rutie struct (class)
+    rtself,   // Rutie self (instance) - methods will receive it as arg
     fn pub_self_empty(row_count: Integer, col_count: Integer) -> Array {
         // build a fake empty Array for testing
 
@@ -73,11 +73,11 @@ methods!(
 #[allow(non_snake_case)]
 #[no_mangle]
 pub extern "C" fn Init_matrix_rs() {
-    Class::new("MatrixRs", None).define(|itself| {
-        itself.def_self("[]", pub_self_brackets);
-        itself.def_self("empty", pub_self_empty);
+    Class::new("MatrixRs", None).define(|klass| {
+        klass.def_self("[]", pub_self_brackets);
+        klass.def_self("empty", pub_self_empty);
 
-        itself.def("to_s", pub_to_s);
+        klass.def("to_s", pub_to_s);
     });
 }
 
