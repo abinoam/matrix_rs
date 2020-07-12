@@ -17,6 +17,9 @@ Done:
 3. Add rutie gem and boilerplate code
 4. Add a fake `MatrixRs.[]` and conect Ruby to Rust
 5. Be able to run tests that talk to the Rust fake implementation
+6. Implemented `MatrixRs.[]`
+7. Implemented simple `MatrixRs.to_s` over Debug trait
+8. Implemented `MatrixRs.*` (dot product) over ndarray dot
 
 OBS:
 - Meanwhile MatrixRs is connected to its Rust counterpart.
