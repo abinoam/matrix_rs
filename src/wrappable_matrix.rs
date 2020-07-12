@@ -15,6 +15,11 @@ impl WrappableMatrix {
     pub fn to_s(&self) -> String {
         self.matrix.to_string()
     }
+
+    pub fn dot(&self, other: &Self) -> Self {
+        let matrix = self.matrix.dot(&other.matrix);
+        Self { matrix }
+    }
 }
 
 impl From<rutie::Array> for WrappableMatrix {

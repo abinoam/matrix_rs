@@ -8,6 +8,7 @@ extern crate ndarray;
 mod args_treating;
 mod wrappable_matrix;
 
+use args_treating::ArgsTreating;
 use rutie::rubysys::class;
 use rutie::types::{Argc, Value};
 use rutie::util::str_to_cstring;
@@ -79,6 +80,15 @@ methods!(
 
         RString::from(matrix_str)
     }
+
+    fn pub_dot(other: MatrixRs) -> MatrixRs {
+        let other = other.unwrap_or_rb_raise();
+        let other_matrix = other.get_data(&*MATRIX_WRAPPER_INSTANCE);
+        let self_matrix = rtself.get_data(&*MATRIX_WRAPPER_INSTANCE);
+
+        let result = self_matrix.dot(other_matrix);
+        Class::from_existing("MatrixRs").wrap_data(result, &*MATRIX_WRAPPER_INSTANCE)
+    }
 );
 
 #[allow(non_snake_case)]
@@ -89,6 +99,7 @@ pub extern "C" fn Init_matrix_rs() {
         klass.def_self("empty", pub_self_empty);
 
         klass.def("to_s", pub_to_s);
+        klass.def("*", pub_dot);
     });
 }
 
