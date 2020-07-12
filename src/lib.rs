@@ -5,6 +5,7 @@ extern crate rutie;
 extern crate lazy_static;
 extern crate ndarray;
 
+mod args_treating;
 mod wrappable_matrix;
 
 use rutie::rubysys::class;

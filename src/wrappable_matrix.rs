@@ -1,3 +1,4 @@
+use crate::args_treating::ArgsTreating;
 use ndarray::Array2;
 
 #[derive(Debug, PartialEq)]
