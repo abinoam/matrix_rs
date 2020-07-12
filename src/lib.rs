@@ -33,8 +33,8 @@ pub extern "C" fn pub_self_brackets(argc: Argc, argv: *const AnyObject, _: AnyOb
 }
 
 methods!(
-    MatrixRs,
-    itself,
+    MatrixRs,  // Rutie struct (class)
+    rtself,    // Rutie self (instance) - methods will receive it as arg
     fn pub_self_empty(row_count: Integer, col_count: Integer) -> Array {
         // build a fake empty Array for testing
 
@@ -64,7 +64,7 @@ methods!(
     }
 
     fn pub_to_s() -> RString {
-        let matrix_str = itself.get_data(&*MATRIX_WRAPPER_INSTANCE).to_s();
+        let matrix_str = rtself.get_data(&*MATRIX_WRAPPER_INSTANCE).to_s();
 
         RString::from(matrix_str)
     }
