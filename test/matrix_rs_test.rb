@@ -33,4 +33,11 @@ class MatrixRsTest < Minitest::Test
     expect = "[[26.62, 33.88],\n [26.62, 33.88]]"
     assert_equal (mr * nr).to_s, expect
   end
+
+  def test_matrix_dot_with_integers
+    mr     = MatrixRs[[1, 2, 3], [1, 2, 3]]
+    nr     = MatrixRs[[1, 2], [3, 4], [5, 6]]
+    expect = "[[22, 28],\n [22, 28]]"
+    assert_equal (mr * nr).to_s, expect
+  end
 end
