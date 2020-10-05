@@ -3,18 +3,19 @@ language: ruby
 cache:
   bundler: true
   directories:
-  - $HOME/.cargo
-  - $TRAVIS_BUILD_DIR/target
+    - $HOME/.cargo
+    - $TRAVIS_BUILD_DIR/target
 rvm:
   - 2.6.3
 env:
   global:
-  - NO_LINK_RUTIE=1
-  - RUST_BACKTRACE=full
-  - PATH=$PATH:$HOME/.cargo/bin
-  jobs:
-  - RUN_RUBY_MATRIX_TEST_SUITE=true
-  - RUN_RUBY_MATRIX_TEST_SUITE=false
+    - NO_LINK_RUTIE=1
+    - RUST_BACKTRACE=full
+    - PATH=$PATH:$HOME/.cargo/bin
+matrix:
+  - env: RUN_RUBY_MATRIX_TEST_SUITE=false
+  allow_failures:
+    - env: RUN_RUBY_MATRIX_TEST_SUITE=true
 before_install:
   - curl -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain stable
   - gem install bundler
