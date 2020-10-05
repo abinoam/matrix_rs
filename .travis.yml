@@ -12,6 +12,9 @@ env:
   - NO_LINK_RUTIE=1
   - RUST_BACKTRACE=full
   - PATH=$PATH:$HOME/.cargo/bin
+  jobs:
+  - RUN_RUBY_MATRIX_TEST_SUITE=true
+  - RUN_RUBY_MATRIX_TEST_SUITE=false
 before_install:
   - curl -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain stable
   - gem install bundler
