@@ -12,8 +12,10 @@ env:
     - NO_LINK_RUTIE=1
     - RUST_BACKTRACE=full
     - PATH=$PATH:$HOME/.cargo/bin
-matrix:
-  - env: RUN_RUBY_MATRIX_TEST_SUITE=false
+  jobs:
+    - RUN_RUBY_MATRIX_TEST_SUITE=false
+    - RUN_RUBY_MATRIX_TEST_SUITE=true
+jobs:
   allow_failures:
     - env: RUN_RUBY_MATRIX_TEST_SUITE=true
 before_install:
