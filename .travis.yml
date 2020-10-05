@@ -7,6 +7,11 @@ cache:
   - $TRAVIS_BUILD_DIR/target
 rvm:
   - 2.6.3
+env:
+  global:
+  - NO_LINK_RUTIE=1
+  - RUST_BACKTRACE=full
+  - PATH=$PATH:$HOME/.cargo/bin
 before_install:
   - curl -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain stable
   - gem install bundler
