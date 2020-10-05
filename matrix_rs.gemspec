@@ -34,4 +34,7 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
   spec.add_dependency "rutie"
+
+  spec.extensions << 'ext/Rakefile'
+  spec.add_runtime_dependency 'thermite', '~> 0'
 end
