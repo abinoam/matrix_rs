@@ -21,11 +21,23 @@ impl WrappableMatrix {
         match self {
             Self::MFloat(self_f64) => match other {
                 Self::MFloat(other_f64) => Self::MFloat(self_f64.dot(other_f64)),
-                _ => unreachable!()
+                _ => {
+                    VM::raise_ex(AnyException::new(
+                        "StandardError",
+                        Some("Different element types RMatrix (not float)"),
+                    ));
+                    unreachable!()
+                }
             },
             Self::MInt(self_i64) => match other {
                 Self::MInt(other_i64) => Self::MInt(self_i64.dot(other_i64)),
-                _ => unreachable!()
+                _ => {
+                    VM::raise_ex(AnyException::new(
+                        "StandardError",
+                        Some("Different element types RMatrix (not integer)"),
+                    ));
+                    unreachable!()
+                }
             },
         }
     }
@@ -56,6 +68,13 @@ impl From<rutie::Array> for WrappableMatrix {
                     })
             });
 
+        if vec_f.len() > 0 && vec_i.len() > 0 {
+            VM::raise_ex(AnyException::new(
+                "StandardError",
+                Some("Not all elements are the same type"),
+            ));
+            unreachable!()
+        }
 
         if vec_f.len() > vec_i.len() {
             let cols = vec_f.len() / rows;
