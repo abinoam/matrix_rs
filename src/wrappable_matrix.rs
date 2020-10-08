@@ -66,25 +66,29 @@ mod tests {
     use super::*;
     use ndarray::arr2;
 
-    mod helpers {
-        use super::*;
+    #[test]
+    fn mfloat_wrappable_matrix_may_multiply() {
+        let ary1 = arr2(&[[1.1, 2.2, 3.3], [4.4, 5.5, 6.6]]);
+        let ary2 = arr2(&[[1.1, 2.2], [3.3, 4.4], [5.5, 6.6]]);
+        let result = arr2(&[[26.62, 33.88], [59.29, 77.44]]);
 
-        pub fn array2x3_with_zeros() -> Array2<f64> {
-            let ary: Array2<f64> = Array2::zeros((2, 3));
-            assert_eq!(ary, arr2(&[[0., 0., 0.], [0., 0., 0.]]));
+        let mfloat1 = WrappableMatrix::MFloat(ary1);
+        let mfloat2 = WrappableMatrix::MFloat(ary2);
+        let expected_result = WrappableMatrix::MFloat(result);
 
-            ary
-        }
+        assert_eq!(expected_result, mfloat1.dot(&mfloat2));
     }
 
     #[test]
-    fn wrappable_matrix_new_can_construct_from_ndarray_array2_f64() {
-        let ary1 = helpers::array2x3_with_zeros();
-        let ary2 = helpers::array2x3_with_zeros();
+    fn mint_wrappable_matrix_may_multiply() {
+        let ary1 = arr2(&[[1, 2, 3], [4, 5, 6]]);
+        let ary2 = arr2(&[[1, 2], [3, 4], [5, 6]]);
+        let result = arr2(&[[22, 28], [49, 64]]);
 
-        let wrappable_matrix_new = WrappableMatrix::MFloat(ary1);
-        let wrappable_matrix_struct = WrappableMatrix::MFloat(ary2);
+        let mint1 = WrappableMatrix::MInt(ary1);
+        let mint2 = WrappableMatrix::MInt(ary2);
+        let expected_result = WrappableMatrix::MInt(result);
 
-        assert_eq!(wrappable_matrix_new, wrappable_matrix_struct);
+        assert_eq!(expected_result, mint1.dot(&mint2));
     }
 }
