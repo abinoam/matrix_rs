@@ -1,3 +1,4 @@
+use rutie::Integer;
 use crate::args_treating::ArgsTreating;
 use ndarray::Array2;
 use rutie::{AnyException, Array, Exception, Float, Object, VM};
@@ -32,7 +33,8 @@ impl WrappableMatrix {
 
 impl From<rutie::Array> for WrappableMatrix {
     fn from(ary: rutie::Array) -> Self {
-        let mut vec: Vec<f64> = Vec::new();
+        let mut vec_f: Vec<f64> = Vec::new();
+        let mut vec_i: Vec<i64> = Vec::new();
         let rows = ary.length();
 
         ary.into_iter()
@@ -41,21 +43,45 @@ impl From<rutie::Array> for WrappableMatrix {
             .for_each(|row_ary| {
                 row_ary
                     .into_iter()
-                    .map(|col_any_obj| col_any_obj.try_convert_to::<Float>())
-                    .map(|result| result.unwrap_or_rb_raise())
-                    .for_each(|col_float| vec.push(col_float.to_f64()))
+                    .for_each(|col_any_obj| {
+                        if let Ok(rb_float) = col_any_obj.try_convert_to::<Float>() {
+                            vec_f.push(rb_float.to_f64())
+                        } else if let Ok(rb_int) = col_any_obj.try_convert_to::<Integer>() {
+                            vec_i.push(rb_int.to_i64())
+                        // Repeat try_convert_to to catch Exception
+                        } else if let Err(exception) = col_any_obj.try_convert_to::<Integer>() {
+                            VM::raise_ex(exception);
+                            unreachable!();
+                        }
+                    })
             });
 
-        let cols = vec.len() / rows;
 
-        match Array2::from_shape_vec((rows, cols), vec) {
-            Ok(matrix) => Self::MFloat(matrix),
-            Err(err) => {
-                VM::raise_ex(AnyException::new(
-                    "StandardError",
-                    Some(&format!("ndarray error: {:?}", err)),
-                ));
-                unreachable!()
+        if vec_f.len() > vec_i.len() {
+            let cols = vec_f.len() / rows;
+
+            match Array2::from_shape_vec((rows, cols), vec_f) {
+                Ok(matrix) => Self::MFloat(matrix),
+                Err(err) => {
+                    VM::raise_ex(AnyException::new(
+                        "StandardError",
+                        Some(&format!("ndarray error: {:?}", err)),
+                    ));
+                    unreachable!()
+                }
+            }
+        } else {
+            let cols = vec_i.len() / rows;
+
+            match Array2::from_shape_vec((rows, cols), vec_i) {
+                Ok(matrix) => Self::MInt(matrix),
+                Err(err) => {
+                    VM::raise_ex(AnyException::new(
+                        "StandardError",
+                        Some(&format!("ndarray error: {:?}", err)),
+                    ));
+                    unreachable!()
+                }
             }
         }
     }
