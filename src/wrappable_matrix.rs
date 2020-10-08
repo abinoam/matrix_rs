@@ -3,22 +3,30 @@ use ndarray::Array2;
 use rutie::{AnyException, Array, Exception, Float, Object, VM};
 
 #[derive(Debug, PartialEq)]
-pub struct WrappableMatrix {
-    matrix: Array2<f64>,
+pub enum WrappableMatrix {
+    MFloat(Array2<f64>),
+    MInt(Array2<i64>),
 }
 
 impl WrappableMatrix {
-    fn new(matrix: Array2<f64>) -> Self {
-        Self { matrix }
-    }
-
     pub fn to_s(&self) -> String {
-        self.matrix.to_string()
+        match self {
+            Self::MFloat(ary_f64) => ary_f64.to_string(),
+            Self::MInt(ary_i64) => ary_i64.to_string(),
+        }
     }
 
     pub fn dot(&self, other: &Self) -> Self {
-        let matrix = self.matrix.dot(&other.matrix);
-        Self { matrix }
+        match self {
+            Self::MFloat(self_f64) => match other {
+                Self::MFloat(other_f64) => Self::MFloat(self_f64.dot(other_f64)),
+                _ => unreachable!()
+            },
+            Self::MInt(self_i64) => match other {
+                Self::MInt(other_i64) => Self::MInt(self_i64.dot(other_i64)),
+                _ => unreachable!()
+            },
+        }
     }
 }
 
@@ -41,7 +49,7 @@ impl From<rutie::Array> for WrappableMatrix {
         let cols = vec.len() / rows;
 
         match Array2::from_shape_vec((rows, cols), vec) {
-            Ok(matrix) => Self { matrix },
+            Ok(matrix) => Self::MFloat(matrix),
             Err(err) => {
                 VM::raise_ex(AnyException::new(
                     "StandardError",
@@ -70,12 +78,12 @@ mod tests {
     }
 
     #[test]
-    fn wrappable_matrix_new_can_construct_from_ndarray_Array2_f64() {
+    fn wrappable_matrix_new_can_construct_from_ndarray_array2_f64() {
         let ary1 = helpers::array2x3_with_zeros();
         let ary2 = helpers::array2x3_with_zeros();
 
-        let wrappable_matrix_new = WrappableMatrix::new(ary1);
-        let wrappable_matrix_struct = WrappableMatrix { matrix: ary2 };
+        let wrappable_matrix_new = WrappableMatrix::MFloat(ary1);
+        let wrappable_matrix_struct = WrappableMatrix::MFloat(ary2);
 
         assert_eq!(wrappable_matrix_new, wrappable_matrix_struct);
     }
