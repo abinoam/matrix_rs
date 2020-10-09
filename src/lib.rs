@@ -44,6 +44,12 @@ pub extern "C" fn pub_self_brackets(argc: Argc, argv: *const AnyObject, _: AnyOb
     Class::from_existing("MatrixRs").wrap_data(matrix, &*MATRIX_WRAPPER_INSTANCE)
 }
 
+impl MatrixRs {
+    fn wrapped_data(&self) -> &WrappableMatrix {
+        self.get_data(&*MATRIX_WRAPPER_INSTANCE)
+    }
+}
+
 methods!(
     MatrixRs, // Rutie struct (class)
     rt_self,  // Rutie self (instance) - methods will receive it as arg
@@ -76,22 +82,22 @@ methods!(
     }
 
     fn pub_to_s() -> RString {
-        let matrix_str = rt_self.get_data(&*MATRIX_WRAPPER_INSTANCE).to_s();
+        let matrix_str = rt_self.wrapped_data().to_s();
 
         RString::from(matrix_str)
     }
 
     fn pub_dot(rt_other: MatrixRs) -> MatrixRs {
         let other = rt_other.unwrap_or_rb_raise();
-        let other_matrix = other.get_data(&*MATRIX_WRAPPER_INSTANCE);
-        let self_matrix = rt_self.get_data(&*MATRIX_WRAPPER_INSTANCE);
+        let other_matrix = other.wrapped_data();
+        let self_matrix = rt_self.wrapped_data();
 
-        let result = self_matrix.dot(other_matrix);
+        let result = self_matrix.dot(&other_matrix);
         Class::from_existing("MatrixRs").wrap_data(result, &*MATRIX_WRAPPER_INSTANCE)
     }
 
     fn pub_fetch(rt_row: Integer, rt_col: Integer) -> AnyObject {
-        let self_matrix = rt_self.get_data(&*MATRIX_WRAPPER_INSTANCE);
+        let self_matrix = rt_self.wrapped_data();
         let row = rt_row.unwrap_or_rb_raise().to_i32() as usize;
         let col = rt_col.unwrap_or_rb_raise().to_i32() as usize;
         let element = self_matrix.fetch(row, col);
