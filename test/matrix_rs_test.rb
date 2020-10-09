@@ -40,4 +40,12 @@ class MatrixRsTest < Minitest::Test
     expect = "[[22, 28],\n [22, 28]]"
     assert_equal (mr * nr).to_s, expect
   end
+
+  def test_matrix_fetch
+    mr = MatrixRs[[1, 2, 3], [4, 5, 6]]
+    assert_equal mr[0, 0], 1
+    assert_equal mr[0, 1], 2
+    assert_equal mr[1, 0], 4
+    assert_equal mr[1, 2], 6
+  end
 end

@@ -12,10 +12,10 @@ use args_treating::ArgsTreating;
 use rutie::rubysys::class;
 use rutie::types::{Argc, Value};
 use rutie::util::str_to_cstring;
-use rutie::{AnyObject, Array, Integer};
+use rutie::{AnyObject, Array, Integer, Float};
 use rutie::{Class, Object, RString, VerifiedObject};
 use std::mem;
-use wrappable_matrix::WrappableMatrix;
+use wrappable_matrix::{WrappableMatrix, IntFloat};
 
 wrappable_struct!(WrappableMatrix, MatrixWrapper, MATRIX_WRAPPER_INSTANCE);
 
@@ -89,6 +89,20 @@ methods!(
         let result = self_matrix.dot(other_matrix);
         Class::from_existing("MatrixRs").wrap_data(result, &*MATRIX_WRAPPER_INSTANCE)
     }
+
+    fn pub_fetch(row: Integer, col: Integer) -> AnyObject {
+        let self_matrix = rtself.get_data(&*MATRIX_WRAPPER_INSTANCE);
+        let element =
+            self_matrix.fetch(
+                row.unwrap_or_rb_raise().to_i32() as usize,
+                col.unwrap_or_rb_raise().to_i32() as usize
+            );
+
+        match element {
+            IntFloat::Float(f64_num) => Float::new(f64_num).into(),
+            IntFloat::Int(i64_num) => Integer::new(i64_num).into(),
+        }
+    }
 );
 
 #[allow(non_snake_case)]
@@ -100,6 +114,7 @@ pub extern "C" fn Init_matrix_rs() {
 
         klass.def("to_s", pub_to_s);
         klass.def("*", pub_dot);
+        klass.def("[]", pub_fetch);
     });
 }
 

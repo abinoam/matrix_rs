@@ -9,6 +9,11 @@ pub enum WrappableMatrix {
     MInt(Array2<i64>),
 }
 
+pub enum IntFloat {
+    Int(i64),
+    Float(f64),
+}
+
 impl WrappableMatrix {
     pub fn to_s(&self) -> String {
         match self {
@@ -39,6 +44,14 @@ impl WrappableMatrix {
                     unreachable!()
                 }
             },
+        }
+    }
+
+    pub fn fetch(&self, row: usize, col: usize) -> IntFloat {
+        match self {
+            Self::MFloat(self_f64) => { IntFloat::Float(self_f64[[row, col]]) },
+            Self::MInt(self_i64) => { IntFloat::Int(self_i64[[row, col]]) },
+
         }
     }
 }
