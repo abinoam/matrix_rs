@@ -46,7 +46,7 @@ pub extern "C" fn pub_self_brackets(argc: Argc, argv: *const AnyObject, _: AnyOb
 
 methods!(
     MatrixRs, // Rutie struct (class)
-    rtself,   // Rutie self (instance) - methods will receive it as arg
+    rt_self,  // Rutie self (instance) - methods will receive it as arg
     fn pub_self_empty(row_count: Integer, col_count: Integer) -> Array {
         // build a fake empty Array for testing
 
@@ -76,27 +76,25 @@ methods!(
     }
 
     fn pub_to_s() -> RString {
-        let matrix_str = rtself.get_data(&*MATRIX_WRAPPER_INSTANCE).to_s();
+        let matrix_str = rt_self.get_data(&*MATRIX_WRAPPER_INSTANCE).to_s();
 
         RString::from(matrix_str)
     }
 
-    fn pub_dot(other: MatrixRs) -> MatrixRs {
-        let other = other.unwrap_or_rb_raise();
+    fn pub_dot(rt_other: MatrixRs) -> MatrixRs {
+        let other = rt_other.unwrap_or_rb_raise();
         let other_matrix = other.get_data(&*MATRIX_WRAPPER_INSTANCE);
-        let self_matrix = rtself.get_data(&*MATRIX_WRAPPER_INSTANCE);
+        let self_matrix = rt_self.get_data(&*MATRIX_WRAPPER_INSTANCE);
 
         let result = self_matrix.dot(other_matrix);
         Class::from_existing("MatrixRs").wrap_data(result, &*MATRIX_WRAPPER_INSTANCE)
     }
 
-    fn pub_fetch(row: Integer, col: Integer) -> AnyObject {
-        let self_matrix = rtself.get_data(&*MATRIX_WRAPPER_INSTANCE);
-        let element =
-            self_matrix.fetch(
-                row.unwrap_or_rb_raise().to_i32() as usize,
-                col.unwrap_or_rb_raise().to_i32() as usize
-            );
+    fn pub_fetch(rt_row: Integer, rt_col: Integer) -> AnyObject {
+        let self_matrix = rt_self.get_data(&*MATRIX_WRAPPER_INSTANCE);
+        let row = rt_row.unwrap_or_rb_raise().to_i32() as usize;
+        let col = rt_col.unwrap_or_rb_raise().to_i32() as usize;
+        let element = self_matrix.fetch(row, col);
 
         match element {
             IntFloat::Float(f64_num) => Float::new(f64_num).into(),
