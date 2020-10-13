@@ -12,10 +12,10 @@ use args_treating::ArgsTreating;
 use rutie::rubysys::class;
 use rutie::types::{Argc, Value};
 use rutie::util::str_to_cstring;
-use rutie::{AnyObject, Array, Integer};
+use rutie::{AnyObject, Array, Integer, Float};
 use rutie::{Class, Object, RString, VerifiedObject};
 use std::mem;
-use wrappable_matrix::WrappableMatrix;
+use wrappable_matrix::{WrappableMatrix, IntFloat};
 
 wrappable_struct!(WrappableMatrix, MatrixWrapper, MATRIX_WRAPPER_INSTANCE);
 
@@ -44,9 +44,15 @@ pub extern "C" fn pub_self_brackets(argc: Argc, argv: *const AnyObject, _: AnyOb
     Class::from_existing("MatrixRs").wrap_data(matrix, &*MATRIX_WRAPPER_INSTANCE)
 }
 
+impl MatrixRs {
+    fn wrapped_data(&self) -> &WrappableMatrix {
+        self.get_data(&*MATRIX_WRAPPER_INSTANCE)
+    }
+}
+
 methods!(
     MatrixRs, // Rutie struct (class)
-    rtself,   // Rutie self (instance) - methods will receive it as arg
+    rt_self,  // Rutie self (instance) - methods will receive it as arg
     fn pub_self_empty(row_count: Integer, col_count: Integer) -> Array {
         // build a fake empty Array for testing
 
@@ -76,18 +82,30 @@ methods!(
     }
 
     fn pub_to_s() -> RString {
-        let matrix_str = rtself.get_data(&*MATRIX_WRAPPER_INSTANCE).to_s();
+        let matrix_str = rt_self.wrapped_data().to_s();
 
         RString::from(matrix_str)
     }
 
-    fn pub_dot(other: MatrixRs) -> MatrixRs {
-        let other = other.unwrap_or_rb_raise();
-        let other_matrix = other.get_data(&*MATRIX_WRAPPER_INSTANCE);
-        let self_matrix = rtself.get_data(&*MATRIX_WRAPPER_INSTANCE);
+    fn pub_dot(rt_other: MatrixRs) -> MatrixRs {
+        let other = rt_other.unwrap_or_rb_raise();
+        let other_matrix = other.wrapped_data();
+        let self_matrix = rt_self.wrapped_data();
 
-        let result = self_matrix.dot(other_matrix);
+        let result = self_matrix.dot(&other_matrix);
         Class::from_existing("MatrixRs").wrap_data(result, &*MATRIX_WRAPPER_INSTANCE)
+    }
+
+    fn pub_fetch(rt_row: Integer, rt_col: Integer) -> AnyObject {
+        let self_matrix = rt_self.wrapped_data();
+        let row = rt_row.unwrap_or_rb_raise().to_i32() as usize;
+        let col = rt_col.unwrap_or_rb_raise().to_i32() as usize;
+        let element = self_matrix.fetch(row, col);
+
+        match element {
+            IntFloat::Float(f64_num) => Float::new(f64_num).into(),
+            IntFloat::Int(i64_num) => Integer::new(i64_num).into(),
+        }
     }
 );
 
@@ -100,6 +118,7 @@ pub extern "C" fn Init_matrix_rs() {
 
         klass.def("to_s", pub_to_s);
         klass.def("*", pub_dot);
+        klass.def("[]", pub_fetch);
     });
 }
 
